@@ -17,7 +17,7 @@
 **Paste this one line into Terminal on macOS:**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ashermenachem/caelus-terminal/v0.1.3/scripts/install-macos.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ashermenachem/caelus-terminal/v0.1.4/scripts/install-macos.sh | bash
 ```
 
 The installer checks for a supported Python first. If it is missing or too old, it installs Homebrew using Homebrew’s official installer, then installs Python 3.11 and continues automatically. macOS may ask the user for an administrator password during Homebrew setup; Caelus never sees, stores, or transmits that password.
@@ -25,6 +25,16 @@ The installer checks for a supported Python first. If it is missing or too old, 
 It then installs the `caelus` command, creates a dedicated local workspace at `~/.caelus`, asks the user to set an optional local access password, offers provider setup, and can start Caelus immediately. It never copies an existing agent profile, conversations, credentials, or browser state.
 
 > **No unnecessary developer tools:** Caelus does not install Xcode because it is not required to run the app. It installs only a supported Python when needed.
+
+### Remove Caelus completely
+
+To remove **all Caelus-owned local files**—its isolated runtime, agent setup, local access gate, session data, logs, virtual environment, and the `caelus` launcher—paste this single command:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/ashermenachem/caelus-terminal/v0.1.4/scripts/uninstall-macos.sh | bash
+```
+
+This is irreversible. It removes only `~/.caelus` and the `~/.local/bin/caelus` launcher when that launcher belongs to Caelus. It intentionally does **not** delete system-wide Python, Homebrew, or a separately used shared agent runtime.
 
 ---
 

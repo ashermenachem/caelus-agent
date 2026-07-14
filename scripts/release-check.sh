@@ -55,5 +55,10 @@ bash "$ROOT/scripts/install-macos.sh" >/dev/null
 "$SMOKE_ROOT/installer-bin/caelus" --demo >/dev/null
 test -f "$SMOKE_ROOT/installer-home/runtime/.env"
 test ! -e "$SMOKE_ROOT/installer-home/runtime/auth.json"
+CAELUS_HOME="$SMOKE_ROOT/installer-home" \
+CAELUS_BIN_DIR="$SMOKE_ROOT/installer-bin" \
+bash "$ROOT/scripts/uninstall-macos.sh" >/dev/null
+test ! -e "$SMOKE_ROOT/installer-home"
+test ! -e "$SMOKE_ROOT/installer-bin/caelus"
 
 echo "Release verification passed: $DIST_DIR"

@@ -2,6 +2,11 @@
 
 All notable changes to Caelus Terminal are documented here.
 
+## 0.1.4 — 2026-07-14
+
+### Added
+- Versioned one-line uninstaller that removes the entire Caelus-owned local workspace and launcher without touching shared system dependencies.
+
 ## 0.1.3 — 2026-07-14
 
 ### Added
