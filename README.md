@@ -17,20 +17,14 @@
 **Paste this one line into Terminal on macOS:**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ashermenachem/caelus-terminal/v0.1.2/scripts/install-macos.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ashermenachem/caelus-terminal/v0.1.3/scripts/install-macos.sh | bash
 ```
 
-That installs the `caelus` command, creates a dedicated local workspace at `~/.caelus`, and never copies your existing agent profile, conversations, credentials, or browser state.
+The installer checks for a supported Python first. If it is missing or too old, it installs Homebrew using Homebrew’s official installer, then installs Python 3.11 and continues automatically. macOS may ask the user for an administrator password during Homebrew setup; Caelus never sees, stores, or transmits that password.
 
-> **First launch:** connect your own AI provider once, then start Caelus:
->
-> ```bash
-> HERMES_HOME="$HOME/.caelus/runtime" hermes setup
-> caelus runtime start
-> caelus
-> ```
->
-> Provider setup is intentionally yours. Caelus does not borrow or copy credentials from another profile.
+It then installs the `caelus` command, creates a dedicated local workspace at `~/.caelus`, asks the user to set an optional local access password, offers provider setup, and can start Caelus immediately. It never copies an existing agent profile, conversations, credentials, or browser state.
+
+> **No unnecessary developer tools:** Caelus does not install Xcode because it is not required to run the app. It installs only a supported Python when needed.
 
 ---
 

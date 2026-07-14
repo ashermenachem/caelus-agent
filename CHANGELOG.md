@@ -2,6 +2,12 @@
 
 All notable changes to Caelus Terminal are documented here.
 
+## 0.1.3 — 2026-07-14
+
+### Added
+- Installer dependency preflight: reuses supported Python, or installs Homebrew and Python 3.11 when necessary.
+- Guided first-run prompts for the local access gate, isolated provider setup, and starting Caelus.
+
 ## 0.1.2 — 2026-07-14
 
 ### Fixed
