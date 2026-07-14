@@ -51,6 +51,16 @@ For a one-shot request instead:
   --chat "Hello"
 ```
 
+Interactive mode creates a persisted Hermes session, streams structured tool activity and final responses through the dashboard, and sends `POST /v1/runs/{run_id}/stop` when you press `Ctrl-C` during an active run. Resume a persisted session (including its transcript) with `--session-id`:
+
+```bash
+./.venv/bin/python -m caelus_terminal \
+  --endpoint http://127.0.0.1:8642/v1 \
+  --api-key YOUR_LOCAL_KEY \
+  --session-id SESSION_ID \
+  --interactive
+```
+
 Within interactive mode, `/help` shows Caelus controls and `/quit` exits. Caelus does not rename or impersonate Hermes commands.
 
 ## Privacy and attribution
