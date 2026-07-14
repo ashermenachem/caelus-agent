@@ -2,6 +2,14 @@
 
 All notable changes to Caelus Agent are documented here.
 
+## 0.1.9 — 2026-07-14
+
+### Added
+- Concrete Caelus Replay recording and deterministic replay through the local Cua Driver trajectory recorder.
+
+### Safety
+- Recorded trajectories are local-only, use Cua Driver action capture, replay at a visible pace, and stop on their first error.
+
 ## 0.1.8 — 2026-07-14
 
 ### Added

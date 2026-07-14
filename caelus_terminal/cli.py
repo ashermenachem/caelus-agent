@@ -34,6 +34,7 @@ from .replay import (
     write_receipt,
 )
 from .templates import TemplateValidationError, export_template, import_template
+from .trajectory import TrajectoryDriver, TrajectoryError, recording_path
 
 
 def demo_state() -> DashboardState:
@@ -169,8 +170,29 @@ def replay_control(argv: list[str]) -> int:
             command.add_argument("--endpoint", help="local Hermes API endpoint ending in /v1")
             command.add_argument("--api-key", help="local Hermes API server key")
 
+    record = subcommands.add_parser("record", help="record or replay concrete browser actions with Cua Driver")
+    record.add_argument("record_action", choices=["start", "stop", "play"])
+    record.add_argument("name")
+    record.add_argument("--recordings-dir", type=Path, default=Path.home() / ".caelus" / "replays" / "recordings")
+
     args = parser.parse_args(argv)
     try:
+        if args.action == "record":
+            output_dir = recording_path(args.recordings_dir, args.name)
+            driver = TrajectoryDriver()
+            if args.record_action == "start":
+                driver.start(output_dir)
+                print(f"Recording started: {args.name}")
+                print("Perform only read-only browser actions with Caelus/Hermes, then run `caelus replay record stop <name>`.")
+                return 0
+            if args.record_action == "stop":
+                driver.stop()
+                print(f"Recording stopped: {args.name}")
+                return 0
+            result = driver.replay(output_dir)
+            count = result.get("replayed", result.get("count", "recorded"))
+            print(f"Replay executed: {args.name} ({count} recorded actions)")
+            return 0
         if args.action == "teach":
             recipe = create_recipe(
                 args.recipes_dir,
@@ -234,7 +256,7 @@ def replay_control(argv: list[str]) -> int:
         if output:
             print(output)
         return 0 if status == "completed" else 1
-    except ReplayValidationError as exc:
+    except (ReplayValidationError, TrajectoryError) as exc:
         parser.error(str(exc))
     return 2
 

@@ -17,7 +17,7 @@
 **Paste this one line into Terminal on macOS:**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ashermenachem/caelus-agent/v0.1.8/scripts/install-macos.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ashermenachem/caelus-agent/v0.1.9/scripts/install-macos.sh | bash
 ```
 
 The installer checks for a supported Python first. If it is missing or too old, it installs Homebrew using Homebrew’s official installer, then installs Python 3.11 and continues automatically. macOS may ask the user for an administrator password during Homebrew setup; Caelus never sees, stores, or transmits that password.
@@ -31,7 +31,7 @@ It then installs the `caelus` command, creates a dedicated local workspace at `~
 To remove **all Caelus-owned local files**—its isolated runtime, agent setup, local access gate, session data, logs, virtual environment, and the `caelus` launcher—paste this single command:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ashermenachem/caelus-agent/v0.1.8/scripts/uninstall-macos.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ashermenachem/caelus-agent/v0.1.9/scripts/uninstall-macos.sh | bash
 ```
 
 This is irreversible. It removes only `~/.caelus` and the `~/.local/bin/caelus` launcher when that launcher belongs to Caelus. It intentionally does **not** delete system-wide Python, Homebrew, or a separately used shared agent runtime.
@@ -139,9 +139,9 @@ caelus template import \
 
 Templates contain portable behavior only: generic instructions, selected tool preferences, and Markdown skills. They reject credentials, `.env` files, memory, session databases, logs, contacts, browser data, symlinks, and machine-specific state.
 
-### Caelus Replay — teach it once, run it safely
+### Caelus Replay — record it once, run it safely
 
-Replay v0 turns a manually described browser workflow into a narrow, durable recipe. It is deliberately **not** a universal macro recorder or a blind self-healing agent.
+Replay turns a bounded, read-only workflow into a durable recipe and can now record/replay concrete browser actions using the local [Cua Driver](https://github.com/trycua/cua-driver). It is deliberately **not** a universal macro recorder or a blind self-healing agent.
 
 ```bash
 caelus replay teach daily-assignments \
@@ -155,7 +155,16 @@ caelus replay preview daily-assignments
 caelus replay run daily-assignments
 ```
 
-Recipes are saved privately under `~/.caelus/replays/`. Each run creates a receipt with the runtime outcome, observed tool activity, and the verification condition that still must be proven. Replay v0 is **read-only**: it instructs the runtime not to submit forms, send messages, purchase, delete, publish, change settings, or handle secrets. If the expected page state differs, the agent must stop and report the mismatch rather than claim success.
+To create a concrete recording, start recording, have Caelus/Hermes perform the selected read-only browser workflow, then stop and replay it:
+
+```bash
+caelus replay record start daily-assignments
+# Ask Caelus to perform the chosen read-only browser workflow.
+caelus replay record stop daily-assignments
+caelus replay record play daily-assignments
+```
+
+The recorder captures Cua Driver actions such as clicks, typing, scrolling, and key presses—not browser passwords, cookies, or arbitrary page storage. Recordings are private under `~/.caelus/replays/recordings/`. They replay concrete actions at a human-observable pace and stop on the first error. Recipes are private under `~/.caelus/replays/`. Each agent run creates a receipt with the runtime outcome, observed tool activity, and the verification condition that still must be proven. Replay is **read-only**: it instructs the runtime not to submit forms, send messages, purchase, delete, publish, change settings, or handle secrets. If the expected page state differs, the agent must stop and report the mismatch rather than claim success.
 
 ---
 
@@ -165,6 +174,7 @@ Recipes are saved privately under `~/.caelus/replays/`. Each run creates a recei
 - No personal memory, sessions, credentials, workflow history, or browser state are included in templates or release artifacts.
 - The access gate is a **local deterrent**, not server-side invite-only authentication. Anyone with access to the same macOS account or installed source can bypass it.
 - Replay recipes never store passwords, tokens, cookies, or browser state. They are restricted to explicitly allowed hostnames and read-only behavior in v0.
+- Concrete Replay recording requires the user-installed `cua-driver` command and its macOS Accessibility/Screen Recording permissions. Caelus does not install it, request permissions, or record user keystrokes itself.
 - Caelus uses [Hermes Agent](https://github.com/NousResearch/hermes-agent) as a separate local runtime dependency. Its attribution and license information are preserved in [NOTICE](NOTICE).
 
 ---
