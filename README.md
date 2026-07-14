@@ -109,6 +109,8 @@ PYTHON="$PWD/.venv/bin/python" bash scripts/release-check.sh
 
 It runs the full test suite, builds `dist/caelus_terminal-*.whl`, verifies the wheel includes the required Caelus modules and legal notices, installs that wheel into a fresh virtual environment, and executes the macOS installer under isolated temporary home/bin/runtime paths.
 
+GitHub Actions runs the same release check on pull requests and updates to `main`, then retains the verified wheel as a workflow artifact. See [CHANGELOG.md](CHANGELOG.md) for versioned release notes.
+
 ## Privacy and attribution
 
 - No personal Caelus memory, credentials, sessions, or workflows are included.

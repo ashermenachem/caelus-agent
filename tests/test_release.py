@@ -31,3 +31,13 @@ def test_release_check_builds_wheel_and_smoke_tests_isolated_install():
     assert "pip wheel --no-deps --no-build-isolation" in script
     assert "pytest tests -q" in script
     assert "CAELUS_SKIP_SETUP=1" in script
+
+
+def test_release_workflow_and_changelog_exist_for_versioned_distribution():
+    workflow = (ROOT / ".github" / "workflows" / "release-check.yml").read_text()
+    changelog = (ROOT / "CHANGELOG.md").read_text()
+
+    assert "macos-latest" in workflow
+    assert "scripts/release-check.sh" in workflow
+    assert "upload-artifact" in workflow
+    assert "0.1.0" in changelog
