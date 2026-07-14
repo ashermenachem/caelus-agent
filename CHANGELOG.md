@@ -2,6 +2,11 @@
 
 All notable changes to Caelus Terminal are documented here.
 
+## 0.1.2 — 2026-07-14
+
+### Fixed
+- Made the piped web installer safe to run from standard input and ensured temporary-source cleanup never changes a successful install into a failed shell exit.
+
 ## 0.1.1 — 2026-07-14
 
 ### Added

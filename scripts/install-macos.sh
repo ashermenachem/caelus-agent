@@ -7,7 +7,7 @@ if [[ "$(uname -s)" != "Darwin" ]]; then
   exit 1
 fi
 
-CAELUS_VERSION="${CAELUS_VERSION:-v0.1.1}"
+CAELUS_VERSION="${CAELUS_VERSION:-v0.1.2}"
 REPOSITORY_URL="https://github.com/ashermenachem/caelus-terminal"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 SOURCE_DIR="${CAELUS_SOURCE_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
@@ -15,6 +15,7 @@ DOWNLOADED_SOURCE=""
 
 cleanup() {
   [[ -z "$DOWNLOADED_SOURCE" ]] || rm -rf "$DOWNLOADED_SOURCE"
+  return 0
 }
 trap cleanup EXIT
 

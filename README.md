@@ -17,7 +17,7 @@
 **Paste this one line into Terminal on macOS:**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ashermenachem/caelus-terminal/v0.1.1/scripts/install-macos.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ashermenachem/caelus-terminal/v0.1.2/scripts/install-macos.sh | bash
 ```
 
 That installs the `caelus` command, creates a dedicated local workspace at `~/.caelus`, and never copies your existing agent profile, conversations, credentials, or browser state.
