@@ -2,6 +2,16 @@
 
 All notable changes to Caelus Terminal are documented here.
 
+## 0.1.1 — 2026-07-14
+
+### Added
+- Public, versioned macOS bootstrap installer and a one-line quick-install command.
+- Product-first README with the Caelus visual mark, feature map, simple onboarding, command reference, and technical reference.
+- Plain `caelus` launch support using only the private connection details in its isolated runtime.
+
+### Fixed
+- Explicit package discovery so README image assets cannot be mistaken for a Python package during wheel builds.
+
 ## 0.1.0 — 2026-07-14
 
 ### Added

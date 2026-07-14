@@ -7,9 +7,9 @@ if [[ "$(uname -s)" != "Darwin" ]]; then
   exit 1
 fi
 
-CAELUS_VERSION="${CAELUS_VERSION:-v0.1.0}"
+CAELUS_VERSION="${CAELUS_VERSION:-v0.1.1}"
 REPOSITORY_URL="https://github.com/ashermenachem/caelus-terminal"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 SOURCE_DIR="${CAELUS_SOURCE_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 DOWNLOADED_SOURCE=""
 
@@ -24,7 +24,7 @@ if [[ ! -f "$SOURCE_DIR/pyproject.toml" ]]; then
   DOWNLOADED_SOURCE="$(mktemp -d)"
   SOURCE_DIR="$DOWNLOADED_SOURCE/source"
   mkdir -p "$SOURCE_DIR"
-  echo "Downloading Caelus Terminal $CAELUS_VERSION…"
+  echo "Downloading Caelus Terminal ${CAELUS_VERSION}…"
   curl -fsSL "$REPOSITORY_URL/archive/refs/tags/$CAELUS_VERSION.tar.gz" \
     | tar -xz -C "$SOURCE_DIR" --strip-components=1
 fi
