@@ -63,6 +63,20 @@ Interactive mode creates a persisted Hermes session, streams structured tool act
 
 Within interactive mode, `/help` shows Caelus controls and `/quit` exits. Caelus does not rename or impersonate Hermes commands.
 
+## Safe agent templates
+
+Caelus templates are portable behavior bundles, **not profile exports**. They may contain only a validated `agent.json` with generic name, description, instructions, and optional toolsets, plus UTF-8 Markdown files below `skills/`. The exporter rejects everything else — including `.env`, credentials, sessions, memory, logs, contacts, browser data, symlinks, and unsupported machine-specific files — and scans allowed text for credential-like content.
+
+Each `.caelus-template` archive has a versioned manifest and SHA-256 checksum for every allowed file. Imports validate the archive before writing it, reject traversal paths/symlinks/checksum mismatches, and will not overwrite an existing destination.
+
+```bash
+# The source must contain agent.json and may contain skills/*.md.
+caelus template export --source ./generic-research-agent --output ./research.caelus-template
+caelus template import --input ./research.caelus-template --destination ./my-research-agent
+```
+
+A template recipient must configure their own Hermes provider credentials, runtime, memory, and integrations.
+
 ## Privacy and attribution
 
 - No personal Caelus memory, credentials, sessions, or workflows are included.

@@ -15,6 +15,7 @@ from .runtime import (
     start_runtime,
     stop_runtime,
 )
+from .templates import TemplateValidationError, export_template, import_template
 
 
 def demo_state() -> DashboardState:
@@ -75,6 +76,27 @@ def runtime_control(argv: list[str], *, action: str) -> int:
     return 0
 
 
+def template_control(argv: list[str], *, action: str) -> int:
+    parser = argparse.ArgumentParser(description=f"{action.title()} a safe Caelus agent template")
+    if action == "export":
+        parser.add_argument("--source", type=Path, required=True)
+        parser.add_argument("--output", type=Path, required=True)
+    else:
+        parser.add_argument("--input", type=Path, required=True)
+        parser.add_argument("--destination", type=Path, required=True)
+    args = parser.parse_args(argv)
+    try:
+        if action == "export":
+            export_template(args.source, args.output)
+            print(f"Exported safe Caelus agent template to {args.output}")
+        else:
+            import_template(args.input, args.destination)
+            print(f"Imported safe Caelus agent template to {args.destination}")
+    except TemplateValidationError as exc:
+        parser.error(str(exc))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     argv = list(argv) if argv is not None else sys.argv[1:]
     if argv and argv[:2] == ["runtime", "init"]:
@@ -85,6 +107,10 @@ def main(argv: list[str] | None = None) -> int:
         return runtime_control(argv[2:], action="status")
     if argv and argv[:2] == ["runtime", "stop"]:
         return runtime_control(argv[2:], action="stop")
+    if argv and argv[:2] == ["template", "export"]:
+        return template_control(argv[2:], action="export")
+    if argv and argv[:2] == ["template", "import"]:
+        return template_control(argv[2:], action="import")
     parser = argparse.ArgumentParser(description="Caelus Terminal")
     parser.add_argument("--demo", action="store_true", help="render the local UI demo")
     parser.add_argument(
