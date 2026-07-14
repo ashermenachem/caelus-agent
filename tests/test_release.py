@@ -11,6 +11,7 @@ def test_release_metadata_and_notices_disclose_hermes_runtime():
 
     assert 'readme = "README.md"' in pyproject
     assert 'license = {text = "MIT"}' in pyproject
+    assert 'packages = ["caelus_terminal"]' in pyproject
     assert "MIT License" in license_text
     assert "Caelus Terminal" in notice
     assert "Hermes Agent" in notice

@@ -19,6 +19,7 @@ from .runtime import (
     api_is_healthy,
     bootstrap_runtime,
     runtime_endpoint,
+    runtime_api_key,
     runtime_is_running,
     start_runtime,
     stop_runtime,
@@ -128,8 +129,27 @@ def gate_control(argv: list[str], *, gate_path: Path) -> int:
     return 0
 
 
+def default_connection_args(runtime_home: Path | None = None) -> list[str]:
+    """Build the private, local connection used by a plain ``caelus`` launch."""
+    home = runtime_home or Path.home() / ".caelus" / "runtime"
+    return [
+        "--endpoint",
+        runtime_endpoint(home),
+        "--api-key",
+        runtime_api_key(home),
+        "--interactive",
+    ]
+
+
 def main(argv: list[str] | None = None) -> int:
     argv = list(argv) if argv is not None else sys.argv[1:]
+    if not argv:
+        try:
+            argv = default_connection_args()
+        except RuntimeError as exc:
+            print(f"Caelus is not ready: {exc}", file=sys.stderr)
+            print("Run `caelus runtime init` first.", file=sys.stderr)
+            return 1
     gate_path = default_gate_path()
     if argv[:1] != ["gate"] and gate_is_configured(gate_path):
         try:

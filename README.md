@@ -1,118 +1,178 @@
+<div align="center">
+  <img src="assets/caelus-mark.png" alt="Caelus classical profile mark" width="220" />
+
 # Caelus Terminal
 
-A macOS-first terminal chat UI powered by the Hermes Agent runtime.
+### Your private, local-first AI command center for macOS.
 
-## Release status
+**A focused terminal experience for running capable agents, keeping conversations persistent, and watching real work happen—without turning your workflow into a dashboard maze.**
 
-Caelus Terminal is a macOS-first terminal UI and local launcher powered by the separately installed Hermes Agent runtime. Its installer and runtime use a dedicated `~/.caelus/runtime` by default; they do not silently reuse an operator's active `~/.hermes` profile.
+[Quick install](#quick-install) · [What it does](#what-you-get) · [Commands](#command-reference) · [Safety](#privacy-and-safety) · [Technical reference](#technical-reference)
+</div>
+
+---
+
+## Quick install
+
+**Paste this one line into Terminal on macOS:**
 
 ```bash
-cd /Users/ashermenachem/Developer/caelus-terminal
-./.venv/bin/python -m caelus_terminal --demo
+curl -fsSL https://raw.githubusercontent.com/ashermenachem/caelus-terminal/v0.1.0/scripts/install-macos.sh | bash
 ```
 
-Expand collapsed tool activity:
+That installs the `caelus` command, creates a dedicated local workspace at `~/.caelus`, and never copies your existing agent profile, conversations, credentials, or browser state.
 
-```bash
-./.venv/bin/python -m caelus_terminal --demo --expanded-tools
+> **First launch:** connect your own AI provider once, then start Caelus:
+>
+> ```bash
+> HERMES_HOME="$HOME/.caelus/runtime" hermes setup
+> caelus runtime start
+> caelus
+> ```
+>
+> Provider setup is intentionally yours. Caelus does not borrow or copy credentials from another profile.
+
+---
+
+## What you get
+
+Caelus Terminal is built for people who want an AI operator that feels immediate, readable, and under their control.
+
+- **A clean command-center terminal** — focused chat, session context, skills, available tools, and live activity in one screen.
+- **Real work you can see** — stream responses and tool progress instead of staring at a spinner and hoping.
+- **Persistent conversations** — resume a session and pick up exactly where you left off.
+- **One-key interruption** — press `Ctrl-C` while work is running to request cancellation.
+- **Private by default** — your Caelus workspace is separate from other local agent profiles.
+- **Portable agent templates** — share reusable behavior without packaging secrets, memories, logs, or personal history.
+- **Local access gate** — optionally require a hidden password before Caelus runs.
+- **A real release path** — tested wheel builds, isolated installer validation, and CI-backed release verification.
+
+### The Caelus flow
+
+```mermaid
+flowchart LR
+    A[You in Terminal] --> B[Caelus Terminal]
+    B --> C[Focused chat + live tool activity]
+    B --> D[Persistent sessions]
+    B --> E[Safe portable templates]
+    B --> F[Optional local access gate]
+    C --> G[Your isolated local agent runtime]
+    D --> G
+    E --> G
+    F --> B
+    G --> H[Your chosen model provider]
 ```
 
-## macOS installer
+Caelus is not another bloated control panel. It is the fast, calm layer between you and capable local agent workflows.
 
-From a checked-out Caelus Terminal release:
+---
+
+## Start here
+
+| Goal | Command |
+| --- | --- |
+| Open Caelus | `caelus` |
+| Start the local runtime | `caelus runtime start` |
+| Check whether it is healthy | `caelus runtime status` |
+| Stop it | `caelus runtime stop` |
+| See the interface without connecting a model | `caelus --demo` |
+| Set a local access password | `caelus gate set` |
+
+### Your first session
 
 ```bash
-bash scripts/install-macos.sh
-```
-
-The installer creates `~/.caelus/venv`, installs the `caelus` command in `~/.local/bin`, initializes only `~/.caelus/runtime`, and installs Hermes if it is missing. It does not copy another user’s memory, sessions, secrets, or workflows. Provider setup remains an explicit, separate step:
-
-```bash
-HERMES_HOME="$HOME/.caelus/runtime" hermes setup
 caelus runtime start
+caelus
 ```
 
-For automated or isolated installation tests, `CAELUS_HOME`, `CAELUS_BIN_DIR`, `PYTHON`, and `CAELUS_SKIP_SETUP=1` are supported. `CAELUS_SKIP_SETUP` does not configure a model provider.
+Use `/help` inside a session for Caelus controls. Use `/quit` or `/exit` when you are done.
 
-## Runtime connection
+---
 
-Caelus connects only to the explicitly supplied local Hermes API endpoint and key. It does not silently read the operator's active `~/.hermes` profile. Start an interactive terminal chat with:
+## Command reference
+
+### Runtime
 
 ```bash
-./.venv/bin/python -m caelus_terminal \
-  --endpoint http://127.0.0.1:8642/v1 \
-  --api-key YOUR_LOCAL_KEY \
-  --agent nova \
-  --interactive
+caelus runtime init                         # create or repair the isolated runtime
+caelus runtime start                        # start its local API service
+caelus runtime status                       # show process and API health
+caelus runtime stop                         # stop only Caelus's local service
 ```
 
-At connection time, Caelus reads Hermes's documented capabilities, skills, and enabled toolsets and renders them in the terminal dashboard. A toolset whose name starts with `mcp-` is displayed as an observable MCP integration; Hermes currently exposes no separate API endpoint for MCP server configuration/status.
-
-For a one-shot request instead:
+### Sessions and chat
 
 ```bash
-./.venv/bin/python -m caelus_terminal \
-  --endpoint http://127.0.0.1:8642/v1 \
-  --api-key YOUR_LOCAL_KEY \
-  --agent nova \
-  --chat "Hello"
+caelus --demo                               # render a no-credential product demo
+caelus --interactive --endpoint URL --api-key KEY
+caelus --chat "Summarize this" --endpoint URL --api-key KEY
+caelus --interactive --session-id SESSION_ID --endpoint URL --api-key KEY
 ```
 
-Interactive mode creates a persisted Hermes session, streams structured tool activity and final responses through the dashboard, and sends `POST /v1/runs/{run_id}/stop` when you press `Ctrl-C` during an active run. Resume a persisted session (including its transcript) with `--session-id`:
+Interactive mode streams structured activity and keeps the session available for later resume. Press `Ctrl-C` during an active run to request cancellation.
+
+### Local access gate
 
 ```bash
-./.venv/bin/python -m caelus_terminal \
-  --endpoint http://127.0.0.1:8642/v1 \
-  --api-key YOUR_LOCAL_KEY \
-  --session-id SESSION_ID \
-  --interactive
+caelus gate set                             # hidden password setup or change
+caelus gate status                          # see whether a gate is configured
 ```
 
-Within interactive mode, `/help` shows Caelus controls and `/quit` exits. Caelus does not rename or impersonate Hermes commands.
+The gate permits three hidden attempts per command launch and stores a salted verifier—not a plaintext password.
 
-## Safe agent templates
-
-Caelus templates are portable behavior bundles, **not profile exports**. They may contain only a validated `agent.json` with generic name, description, instructions, and optional toolsets, plus UTF-8 Markdown files below `skills/`. The exporter rejects everything else — including `.env`, credentials, sessions, memory, logs, contacts, browser data, symlinks, and unsupported machine-specific files — and scans allowed text for credential-like content.
-
-Each `.caelus-template` archive has a versioned manifest and SHA-256 checksum for every allowed file. Imports validate the archive before writing it, reject traversal paths/symlinks/checksum mismatches, and will not overwrite an existing destination.
+### Portable agent templates
 
 ```bash
-# The source must contain agent.json and may contain skills/*.md.
-caelus template export --source ./generic-research-agent --output ./research.caelus-template
-caelus template import --input ./research.caelus-template --destination ./my-research-agent
+caelus template export \
+  --source ./generic-research-agent \
+  --output ./research.caelus-template
+
+caelus template import \
+  --input ./research.caelus-template \
+  --destination ./my-research-agent
 ```
 
-A template recipient must configure their own Hermes provider credentials, runtime, memory, and integrations.
+Templates contain portable behavior only: generic instructions, selected tool preferences, and Markdown skills. They reject credentials, `.env` files, memory, session databases, logs, contacts, browser data, symlinks, and machine-specific state.
 
-## Local access gate
+---
 
-Caelus can require a hidden password prompt before every normal command. Configure it locally — the password is never accepted as a command-line argument or saved in plaintext:
+## Privacy and safety
+
+- Caelus creates and uses `~/.caelus/runtime`; it does **not** silently reuse an existing `~/.hermes` profile.
+- No personal memory, sessions, credentials, workflow history, or browser state are included in templates or release artifacts.
+- The access gate is a **local deterrent**, not server-side invite-only authentication. Anyone with access to the same macOS account or installed source can bypass it.
+- Caelus uses [Hermes Agent](https://github.com/NousResearch/hermes-agent) as a separate local runtime dependency. Its attribution and license information are preserved in [NOTICE](NOTICE).
+
+---
+
+## Technical reference
+
+### Install details
+
+The installer supports macOS and Python 3.9+. It creates:
+
+```text
+~/.caelus/
+├── runtime/                 # dedicated local runtime and private API key
+└── venv/                    # Caelus installation environment
+
+~/.local/bin/caelus          # command-line launcher
+```
+
+If `~/.local/bin` is not already on your shell `PATH`, reopen Terminal after installation or add it to your shell profile.
+
+For controlled installs, use:
 
 ```bash
-caelus gate set
-caelus gate status
+CAELUS_HOME=/custom/caelus CAELUS_BIN_DIR=/custom/bin bash scripts/install-macos.sh
 ```
 
-The gate stores only a salted password verifier in `~/.caelus/access-gate.json` with private filesystem permissions. Each command invocation allows **three attempts**; after three failures, that invocation exits without running the requested Caelus command. Changing an existing gate requires the current password first.
-
-This is a **local deterrent, not real invite-only authentication**. Anyone who can modify the installed source/package, replace the gate file, or access the same macOS account can bypass it. A genuinely invite-only product requires server-side authentication and per-user accounts; Caelus does not claim otherwise.
-
-## Packaging and release verification
-
-Caelus Terminal is MIT-licensed; see [LICENSE](LICENSE). [NOTICE](NOTICE) identifies Hermes Agent as the separately installed MIT-licensed runtime dependency and preserves its attribution.
-
-Before distributing a checkout or the wheel, run the release gate:
+### Verification and contributors
 
 ```bash
 PYTHON="$PWD/.venv/bin/python" bash scripts/release-check.sh
 ```
 
-It runs the full test suite, builds `dist/caelus_terminal-*.whl`, verifies the wheel includes the required Caelus modules and legal notices, installs that wheel into a fresh virtual environment, and executes the macOS installer under isolated temporary home/bin/runtime paths.
+The release check runs the full suite, builds the distributable wheel, verifies the legal files and shipped modules, tests a fresh wheel install, and tests the macOS installer in isolated temporary paths. GitHub Actions runs the same gate on pull requests and updates to `main`.
 
-GitHub Actions runs the same release check on pull requests and updates to `main`, then retains the verified wheel as a workflow artifact. See [CHANGELOG.md](CHANGELOG.md) for versioned release notes.
-
-## Privacy and attribution
-
-- No personal Caelus memory, credentials, sessions, or workflows are included.
-- Runtime testing uses an isolated `HERMES_HOME`, never the active `~/.hermes` directory.
-- Caelus Terminal is powered by Hermes Agent; runtime attribution and licensing are in [NOTICE](NOTICE).
+See [CHANGELOG.md](CHANGELOG.md) for version history, [LICENSE](LICENSE) for the MIT license, and [NOTICE](NOTICE) for third-party attribution.

@@ -29,6 +29,7 @@ Source = "https://github.com/ashermenachem/caelus-terminal"
 caelus = "caelus_terminal.cli:main"
 
 [tool.setuptools]
+packages = ["caelus_terminal"]
 license-files = ["LICENSE", "NOTICE"]
 
 [tool.pytest.ini_options]

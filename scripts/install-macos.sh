@@ -7,7 +7,28 @@ if [[ "$(uname -s)" != "Darwin" ]]; then
   exit 1
 fi
 
-SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+CAELUS_VERSION="${CAELUS_VERSION:-v0.1.0}"
+REPOSITORY_URL="https://github.com/ashermenachem/caelus-terminal"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SOURCE_DIR="${CAELUS_SOURCE_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
+DOWNLOADED_SOURCE=""
+
+cleanup() {
+  [[ -z "$DOWNLOADED_SOURCE" ]] || rm -rf "$DOWNLOADED_SOURCE"
+}
+trap cleanup EXIT
+
+if [[ ! -f "$SOURCE_DIR/pyproject.toml" ]]; then
+  command -v curl >/dev/null || { echo "curl is required for web installation." >&2; exit 1; }
+  command -v tar >/dev/null || { echo "tar is required for web installation." >&2; exit 1; }
+  DOWNLOADED_SOURCE="$(mktemp -d)"
+  SOURCE_DIR="$DOWNLOADED_SOURCE/source"
+  mkdir -p "$SOURCE_DIR"
+  echo "Downloading Caelus Terminal $CAELUS_VERSION…"
+  curl -fsSL "$REPOSITORY_URL/archive/refs/tags/$CAELUS_VERSION.tar.gz" \
+    | tar -xz -C "$SOURCE_DIR" --strip-components=1
+fi
+
 CAELUS_HOME="${CAELUS_HOME:-$HOME/.caelus}"
 VENV="$CAELUS_HOME/venv"
 BIN_DIR="${CAELUS_BIN_DIR:-$HOME/.local/bin}"
