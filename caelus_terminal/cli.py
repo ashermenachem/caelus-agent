@@ -1,10 +1,20 @@
 from __future__ import annotations
 
 import argparse
+from pathlib import Path
+import sys
 
 from .client import HermesClient
 from .dashboard import DashboardState, render_dashboard
 from .helptext import runtime_help
+from .runtime import (
+    api_is_healthy,
+    bootstrap_runtime,
+    runtime_endpoint,
+    runtime_is_running,
+    start_runtime,
+    stop_runtime,
+)
 
 
 def demo_state() -> DashboardState:
@@ -20,7 +30,61 @@ def demo_state() -> DashboardState:
     )
 
 
+def runtime_init(argv: list[str]) -> int:
+    parser = argparse.ArgumentParser(description="Create an isolated Caelus runtime")
+    parser.add_argument(
+        "--runtime-home",
+        type=Path,
+        default=Path.home() / ".caelus" / "runtime",
+        help="dedicated HERMES_HOME for Caelus",
+    )
+    parser.add_argument("--runtime-port", type=int, default=8642)
+    args = parser.parse_args(argv)
+    details = bootstrap_runtime(args.runtime_home, port=args.runtime_port)
+    print(f"Created isolated Caelus runtime at {details.home}")
+    print(f"HERMES_HOME={details.home}")
+    print(f"API endpoint: {runtime_endpoint(details.home)}")
+    print("No provider credentials or personal Hermes state were copied.")
+    print(f"Next: HERMES_HOME={details.home} hermes setup")
+    return 0
+
+
+def runtime_control(argv: list[str], *, action: str) -> int:
+    parser = argparse.ArgumentParser(description=f"{action.title()} the isolated Caelus runtime")
+    parser.add_argument(
+        "--runtime-home",
+        type=Path,
+        default=Path.home() / ".caelus" / "runtime",
+        help="dedicated HERMES_HOME for Caelus",
+    )
+    args = parser.parse_args(argv)
+    if action == "start":
+        pid = start_runtime(args.runtime_home)
+        print(f"Started isolated Caelus runtime (PID {pid}).")
+        return 0
+    if action == "status":
+        process = "running" if runtime_is_running(args.runtime_home) else "stopped"
+        api = "healthy" if api_is_healthy(args.runtime_home) else "unreachable"
+        print(f"process: {process}")
+        print(f"api: {api}")
+        return 0
+    if stop_runtime(args.runtime_home):
+        print("Stopped isolated Caelus runtime.")
+    else:
+        print("Caelus runtime was not running.")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
+    argv = list(argv) if argv is not None else sys.argv[1:]
+    if argv and argv[:2] == ["runtime", "init"]:
+        return runtime_init(argv[2:])
+    if argv and argv[:2] == ["runtime", "start"]:
+        return runtime_control(argv[2:], action="start")
+    if argv and argv[:2] == ["runtime", "status"]:
+        return runtime_control(argv[2:], action="status")
+    if argv and argv[:2] == ["runtime", "stop"]:
+        return runtime_control(argv[2:], action="stop")
     parser = argparse.ArgumentParser(description="Caelus Terminal")
     parser.add_argument("--demo", action="store_true", help="render the local UI demo")
     parser.add_argument(

@@ -16,8 +16,12 @@ command -v python3 >/dev/null || { echo "Python 3 is required." >&2; exit 1; }
 mkdir -p "$CAELUS_HOME" "$BIN_DIR"
 python3 -m venv "$VENV"
 "$VENV/bin/python" -m pip install --upgrade pip >/dev/null
-"$VENV/bin/python" -m pip install "$SOURCE_DIR" >/dev/null
+"$VENV/bin/python" -m pip install --force-reinstall --no-deps "$SOURCE_DIR" >/dev/null
 ln -sfn "$VENV/bin/caelus" "$BIN_DIR/caelus"
+
+# This creates only a dedicated HERMES_HOME and a loopback API key. It never
+# clones ~/.hermes or starts provider authentication in the user's main profile.
+"$BIN_DIR/caelus" runtime init
 
 echo "Caelus Terminal installed: $BIN_DIR/caelus"
 if ! command -v hermes >/dev/null 2>&1; then
@@ -27,16 +31,15 @@ if ! command -v hermes >/dev/null 2>&1; then
 fi
 
 if ! command -v hermes >/dev/null 2>&1; then
-  echo "The runtime install completed but 'hermes' is not on PATH yet. Reopen Terminal, then run: hermes setup" >&2
+  echo "The runtime install completed but 'hermes' is not on PATH yet. Reopen Terminal, then configure Caelus with the command below." >&2
   exit 1
 fi
 
 if [[ "${CAELUS_SKIP_SETUP:-0}" == "1" ]]; then
-  echo "Skipping native setup (CAELUS_SKIP_SETUP=1)."
+  echo "Skipping isolated provider setup (CAELUS_SKIP_SETUP=1)."
   exit 0
 fi
 
-echo "Starting native agent setup…"
-hermes setup
-
-echo "Setup complete. Start Caelus Terminal with: caelus --help"
+echo "Caelus has its own empty runtime. Configure a provider there; this does not reuse ~/.hermes:"
+echo "  HERMES_HOME=\"$CAELUS_HOME/runtime\" hermes setup"
+echo "Then start the local API: caelus runtime start"
