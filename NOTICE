@@ -1,0 +1,18 @@
+Caelus Terminal Notices
+=======================
+
+Caelus Terminal is a terminal user interface and local launcher powered by
+Hermes Agent. Hermes Agent is a material runtime dependency; it supplies the
+agent loop, model/provider configuration, tools, memory, integrations, and
+permissions. Caelus Terminal does not bundle Hermes Agent or represent it as
+its own runtime.
+
+Hermes Agent
+------------
+Copyright (c) 2025 Nous Research
+Licensed under the MIT License.
+Source and license: https://github.com/NousResearch/hermes-agent
+
+Users install and configure Hermes Agent separately. Their Hermes credentials,
+profiles, memories, sessions, connector tokens, and local data are not
+included in Caelus Terminal releases or templates.

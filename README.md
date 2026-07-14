@@ -2,9 +2,9 @@
 
 A macOS-first terminal chat UI powered by the Hermes Agent runtime.
 
-## Current prototype
+## Release status
 
-The first build is isolated from the active Hermes installation. It renders the matrix-style terminal dashboard and includes a small client for Hermes's documented local API server.
+Caelus Terminal is a macOS-first terminal UI and local launcher powered by the separately installed Hermes Agent runtime. Its installer and runtime use a dedicated `~/.caelus/runtime` by default; they do not silently reuse an operator's active `~/.hermes` profile.
 
 ```bash
 cd /Users/ashermenachem/Developer/caelus-terminal
@@ -25,7 +25,14 @@ From a checked-out Caelus Terminal release:
 bash scripts/install-macos.sh
 ```
 
-The installer creates `~/.caelus/venv`, installs the `caelus` command in `~/.local/bin`, installs Hermes automatically if it is missing, and launches native `hermes setup`. It does not copy another user’s memory, sessions, secrets, or workflows.
+The installer creates `~/.caelus/venv`, installs the `caelus` command in `~/.local/bin`, initializes only `~/.caelus/runtime`, and installs Hermes if it is missing. It does not copy another user’s memory, sessions, secrets, or workflows. Provider setup remains an explicit, separate step:
+
+```bash
+HERMES_HOME="$HOME/.caelus/runtime" hermes setup
+caelus runtime start
+```
+
+For automated or isolated installation tests, `CAELUS_HOME`, `CAELUS_BIN_DIR`, `PYTHON`, and `CAELUS_SKIP_SETUP=1` are supported. `CAELUS_SKIP_SETUP` does not configure a model provider.
 
 ## Runtime connection
 
@@ -90,8 +97,20 @@ The gate stores only a salted password verifier in `~/.caelus/access-gate.json` 
 
 This is a **local deterrent, not real invite-only authentication**. Anyone who can modify the installed source/package, replace the gate file, or access the same macOS account can bypass it. A genuinely invite-only product requires server-side authentication and per-user accounts; Caelus does not claim otherwise.
 
+## Packaging and release verification
+
+Caelus Terminal is MIT-licensed; see [LICENSE](LICENSE). [NOTICE](NOTICE) identifies Hermes Agent as the separately installed MIT-licensed runtime dependency and preserves its attribution.
+
+Before distributing a checkout or the wheel, run the release gate:
+
+```bash
+PYTHON="$PWD/.venv/bin/python" bash scripts/release-check.sh
+```
+
+It runs the full test suite, builds `dist/caelus_terminal-*.whl`, verifies the wheel includes the required Caelus modules and legal notices, installs that wheel into a fresh virtual environment, and executes the macOS installer under isolated temporary home/bin/runtime paths.
+
 ## Privacy and attribution
 
 - No personal Caelus memory, credentials, sessions, or workflows are included.
 - Runtime testing uses an isolated `HERMES_HOME`, never the active `~/.hermes` directory.
-- Caelus Terminal is powered by Hermes Agent; full licensing notices will be included before distribution.
+- Caelus Terminal is powered by Hermes Agent; runtime attribution and licensing are in [NOTICE](NOTICE).

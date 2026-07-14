@@ -10,18 +10,19 @@ fi
 SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CAELUS_HOME="${CAELUS_HOME:-$HOME/.caelus}"
 VENV="$CAELUS_HOME/venv"
-BIN_DIR="$HOME/.local/bin"
+BIN_DIR="${CAELUS_BIN_DIR:-$HOME/.local/bin}"
+PYTHON="${PYTHON:-python3}"
 
-command -v python3 >/dev/null || { echo "Python 3 is required." >&2; exit 1; }
+command -v "$PYTHON" >/dev/null || { echo "Python 3 is required." >&2; exit 1; }
 mkdir -p "$CAELUS_HOME" "$BIN_DIR"
-python3 -m venv "$VENV"
+"$PYTHON" -m venv "$VENV"
 "$VENV/bin/python" -m pip install --upgrade pip >/dev/null
 "$VENV/bin/python" -m pip install --force-reinstall --no-deps "$SOURCE_DIR" >/dev/null
 ln -sfn "$VENV/bin/caelus" "$BIN_DIR/caelus"
 
 # This creates only a dedicated HERMES_HOME and a loopback API key. It never
 # clones ~/.hermes or starts provider authentication in the user's main profile.
-"$BIN_DIR/caelus" runtime init
+"$BIN_DIR/caelus" runtime init --runtime-home "$CAELUS_HOME/runtime"
 
 echo "Caelus Terminal installed: $BIN_DIR/caelus"
 if ! command -v hermes >/dev/null 2>&1; then
