@@ -4,6 +4,7 @@ import argparse
 
 from .client import HermesClient
 from .dashboard import DashboardState, render_dashboard
+from .helptext import runtime_help
 
 
 def demo_state() -> DashboardState:
@@ -40,15 +41,29 @@ def main(argv: list[str] | None = None) -> int:
         if not args.endpoint or not args.api_key:
             parser.error("--interactive requires --endpoint and --api-key")
         client = HermesClient(args.endpoint, args.api_key)
-        print(render_dashboard(demo_state()))
+        runtime = client.discover()
+        state = DashboardState(
+            agent_name=args.agent,
+            model_name=runtime.model_name,
+            skills=runtime.skills,
+            mcp_servers=runtime.mcp_servers,
+            tools=runtime.tools,
+        )
+        print(render_dashboard(state))
         print("Type /quit to end the Caelus chat session.")
         while True:
             message = input("\n> ").strip()
             if message in {"/quit", "/exit"}:
                 return 0
+            if message == "/help":
+                print("\n" + runtime_help())
+                continue
             if not message:
                 continue
-            print(f"\n{args.agent}: {client.chat(message, conversation=args.agent)}")
+            state.transcript.append(("You", message))
+            reply = client.chat(message, conversation=args.agent)
+            state.transcript.append((args.agent, reply))
+            print("\n" + render_dashboard(state))
 
     if args.chat:
         if not args.endpoint or not args.api_key:

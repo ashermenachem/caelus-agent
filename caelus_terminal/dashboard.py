@@ -12,6 +12,7 @@ class DashboardState:
     skills: list[str] = field(default_factory=list)
     mcp_servers: list[str] = field(default_factory=list)
     tools: list[str] = field(default_factory=list)
+    transcript: list[tuple[str, str]] = field(default_factory=list)
     tool_activity: list[str] = field(default_factory=list)
 
 
@@ -41,7 +42,14 @@ def render_dashboard(
     ]
     lines = [title_line, "├" + border + "┤"]
     lines.extend(f"│ {line:<{width - 4}} │" for line in capability_lines)
-    lines.extend(["├" + border + "┤", f"│ {'Chat session ready.':<{width - 4}} │"])
+    lines.extend(["├" + border + "┤"])
+    if state.transcript:
+        lines.extend(
+            f"│ {f'{speaker}: {message}'[: width - 4]:<{width - 4}} │"
+            for speaker, message in state.transcript[-8:]
+        )
+    else:
+        lines.append(f"│ {'Chat session ready.':<{width - 4}} │")
 
     activity_count = len(state.tool_activity)
     if activity_count:

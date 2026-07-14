@@ -27,9 +27,21 @@ bash scripts/install-macos.sh
 
 The installer creates `~/.caelus/venv`, installs the `caelus` command in `~/.local/bin`, installs Hermes automatically if it is missing, and launches native `hermes setup`. It does not copy another user’s memory, sessions, secrets, or workflows.
 
-## Optional runtime connection
+## Runtime connection
 
-When a separately configured local Hermes API server is running, send one message without touching the active default Hermes home:
+Caelus connects only to the explicitly supplied local Hermes API endpoint and key. It does not silently read the operator's active `~/.hermes` profile. Start an interactive terminal chat with:
+
+```bash
+./.venv/bin/python -m caelus_terminal \
+  --endpoint http://127.0.0.1:8642/v1 \
+  --api-key YOUR_LOCAL_KEY \
+  --agent nova \
+  --interactive
+```
+
+At connection time, Caelus reads Hermes's documented capabilities, skills, and enabled toolsets and renders them in the terminal dashboard. A toolset whose name starts with `mcp-` is displayed as an observable MCP integration; Hermes currently exposes no separate API endpoint for MCP server configuration/status.
+
+For a one-shot request instead:
 
 ```bash
 ./.venv/bin/python -m caelus_terminal \
@@ -38,6 +50,8 @@ When a separately configured local Hermes API server is running, send one messag
   --agent nova \
   --chat "Hello"
 ```
+
+Within interactive mode, `/help` shows Caelus controls and `/quit` exits. Caelus does not rename or impersonate Hermes commands.
 
 ## Privacy and attribution
 
