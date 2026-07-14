@@ -3,9 +3,9 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "caelus-terminal"
-version = "0.1.6"
-description = "Matrix-style terminal chat UI powered by the Hermes Agent runtime"
+name = "caelus-agent"
+version = "0.1.7"
+description = "A local-first agent command center powered by Hermes Agent"
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "Proprietary"}
@@ -22,8 +22,8 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/ashermenachem/caelus-terminal"
-Source = "https://github.com/ashermenachem/caelus-terminal"
+Homepage = "https://github.com/ashermenachem/caelus-agent"
+Source = "https://github.com/ashermenachem/caelus-agent"
 
 [project.scripts]
 caelus = "caelus_terminal.cli:main"

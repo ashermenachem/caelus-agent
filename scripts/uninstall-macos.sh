@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Removes Caelus Terminal's own local workspace and launcher only.
+# Removes Caelus Agent's own local workspace and launcher only.
 set -euo pipefail
 
 CAELUS_HOME="${CAELUS_HOME:-$HOME/.caelus}"
@@ -20,4 +20,4 @@ if [[ -L "$LAUNCHER" && "$(readlink "$LAUNCHER")" == "$TARGET" ]]; then
 fi
 
 rm -rf "$CAELUS_HOME"
-echo "Caelus Terminal has been removed from this Mac."
+echo "Caelus Agent has been removed from this Mac."

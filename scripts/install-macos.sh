@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# Installs Caelus Terminal without modifying an existing Hermes profile.
+# Installs Caelus Agent without modifying an existing Hermes profile.
 set -euo pipefail
 
 if [[ "$(uname -s)" != "Darwin" ]]; then
-  echo "Caelus Terminal supports macOS only." >&2
+  echo "Caelus Agent supports macOS only." >&2
   exit 1
 fi
 
-CAELUS_VERSION="${CAELUS_VERSION:-v0.1.6}"
-REPOSITORY_URL="https://github.com/ashermenachem/caelus-terminal"
+CAELUS_VERSION="${CAELUS_VERSION:-v0.1.7}"
+REPOSITORY_URL="https://github.com/ashermenachem/caelus-agent"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 SOURCE_DIR="${CAELUS_SOURCE_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 DOWNLOADED_SOURCE=""
@@ -80,7 +80,7 @@ if [[ ! -f "$SOURCE_DIR/pyproject.toml" ]]; then
   DOWNLOADED_SOURCE="$(mktemp -d)"
   SOURCE_DIR="$DOWNLOADED_SOURCE/source"
   mkdir -p "$SOURCE_DIR"
-  echo "Downloading Caelus Terminal ${CAELUS_VERSION}…"
+  echo "Downloading Caelus Agent ${CAELUS_VERSION}…"
   curl -fsSL "$REPOSITORY_URL/archive/refs/tags/$CAELUS_VERSION.tar.gz" \
     | tar -xz -C "$SOURCE_DIR" --strip-components=1
 fi
@@ -96,7 +96,7 @@ ln -sfn "$VENV/bin/caelus" "$BIN_DIR/caelus"
 # clones another local profile or starts provider authentication in that profile.
 "$BIN_DIR/caelus" runtime init --runtime-home "$CAELUS_HOME/runtime"
 
-echo "Caelus Terminal installed: $BIN_DIR/caelus"
+echo "Caelus Agent installed: $BIN_DIR/caelus"
 if ! command -v hermes >/dev/null 2>&1; then
   echo "Installing the local agent runtime…"
   curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash

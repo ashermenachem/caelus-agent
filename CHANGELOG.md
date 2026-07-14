@@ -1,6 +1,12 @@
 # Changelog
 
-All notable changes to Caelus Terminal are documented here.
+All notable changes to Caelus Agent are documented here.
+
+## 0.1.7 — 2026-07-14
+
+### Changed
+- Renamed the product from Caelus Terminal to Caelus Agent across product copy, package metadata, installer messaging, notices, and licensing.
+- Replaced the package/about description with “A local-first agent command center powered by Hermes Agent.”
 
 ## 0.1.6 — 2026-07-14
 
@@ -10,7 +16,7 @@ All notable changes to Caelus Terminal are documented here.
 ## 0.1.5 — 2026-07-14
 
 ### Changed
-- Future Caelus Terminal releases are proprietary and all rights are reserved. Earlier MIT-licensed releases retain their original license grants.
+- Future Caelus Agent releases are proprietary and all rights are reserved. Earlier MIT-licensed releases retain their original license grants.
 
 ## 0.1.4 — 2026-07-14
 

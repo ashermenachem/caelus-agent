@@ -17,12 +17,12 @@ def test_macos_installer_bootstraps_only_an_isolated_caelus_runtime():
 def test_macos_installer_can_bootstrap_a_versioned_release_when_piped_from_the_web():
     script = SCRIPT.read_text()
 
-    assert 'CAELUS_VERSION="${CAELUS_VERSION:-v0.1.6}"' in script
+    assert 'CAELUS_VERSION="${CAELUS_VERSION:-v0.1.7}"' in script
     assert "archive/refs/tags/$CAELUS_VERSION.tar.gz" in script
     assert "tar -xz" in script
     assert "CAELUS_SOURCE_DIR" in script
     assert '${BASH_SOURCE[0]:-$0}' in script
-    assert 'Downloading Caelus Terminal ${CAELUS_VERSION}' in script
+    assert 'Downloading Caelus Agent ${CAELUS_VERSION}' in script
     assert "cleanup()" in script
     assert "  return 0" in script
 

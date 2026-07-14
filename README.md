@@ -1,7 +1,7 @@
 <div align="center">
   <img src="assets/caelus-mark.png" alt="Caelus classical profile mark" width="220" />
 
-# Caelus Terminal
+# Caelus Agent
 
 ### Your private, local-first AI command center for macOS.
 
@@ -17,7 +17,7 @@
 **Paste this one line into Terminal on macOS:**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ashermenachem/caelus-terminal/v0.1.6/scripts/install-macos.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ashermenachem/caelus-agent/v0.1.7/scripts/install-macos.sh | bash
 ```
 
 The installer checks for a supported Python first. If it is missing or too old, it installs Homebrew using Homebrew’s official installer, then installs Python 3.11 and continues automatically. macOS may ask the user for an administrator password during Homebrew setup; Caelus never sees, stores, or transmits that password.
@@ -31,7 +31,7 @@ It then installs the `caelus` command, creates a dedicated local workspace at `~
 To remove **all Caelus-owned local files**—its isolated runtime, agent setup, local access gate, session data, logs, virtual environment, and the `caelus` launcher—paste this single command:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ashermenachem/caelus-terminal/v0.1.6/scripts/uninstall-macos.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ashermenachem/caelus-agent/v0.1.7/scripts/uninstall-macos.sh | bash
 ```
 
 This is irreversible. It removes only `~/.caelus` and the `~/.local/bin/caelus` launcher when that launcher belongs to Caelus. It intentionally does **not** delete system-wide Python, Homebrew, or a separately used shared agent runtime.
@@ -40,7 +40,7 @@ This is irreversible. It removes only `~/.caelus` and the `~/.local/bin/caelus` 
 
 ## What you get
 
-Caelus Terminal is built for people who want an AI operator that feels immediate, readable, and under their control.
+Caelus Agent is built for people who want an AI operator that feels immediate, readable, and under their control.
 
 - **A clean command-center terminal** — focused chat, session context, skills, available tools, and live activity in one screen.
 - **Real work you can see** — stream responses and tool progress instead of staring at a spinner and hoping.
@@ -55,7 +55,7 @@ Caelus Terminal is built for people who want an AI operator that feels immediate
 
 ```mermaid
 flowchart LR
-    A[You in Terminal] --> B[Caelus Terminal]
+    A[You in Terminal] --> B[Caelus Agent]
     B --> C[Focused chat + live tool activity]
     B --> D[Persistent sessions]
     B --> E[Safe portable templates]
@@ -179,8 +179,8 @@ PYTHON="$PWD/.venv/bin/python" bash scripts/release-check.sh
 
 The release check runs the full suite, builds the distributable wheel, verifies the legal files and shipped modules, tests a fresh wheel install, and tests the macOS installer in isolated temporary paths. GitHub Actions runs the same gate on pull requests and updates to `main`.
 
-See [CHANGELOG.md](CHANGELOG.md) for version history, [LICENSE](LICENSE) for the proprietary Caelus Terminal terms, and [NOTICE](NOTICE) for third-party attribution.
+See [CHANGELOG.md](CHANGELOG.md) for version history, [LICENSE](LICENSE) for the proprietary Caelus Agent terms, and [NOTICE](NOTICE) for third-party attribution.
 
 ### Licensing note
 
-Caelus Terminal releases starting with `v0.1.5` are proprietary and all rights are reserved. Earlier public releases were published under MIT; those earlier grants are not retroactively revoked. This repository remains public for installation and evaluation, not for reuse or redistribution.
+Caelus Agent releases starting with `v0.1.5` are proprietary and all rights are reserved. Earlier public releases were published under MIT; those earlier grants are not retroactively revoked. This repository remains public for installation and evaluation, not for reuse or redistribution.

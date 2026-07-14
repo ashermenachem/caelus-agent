@@ -20,7 +20,7 @@ rm -rf "$DIST_DIR"
 mkdir -p "$DIST_DIR"
 "$PYTHON" -m pip wheel --no-deps --no-build-isolation "$ROOT" --wheel-dir "$DIST_DIR"
 
-WHEEL=("$DIST_DIR"/caelus_terminal-*.whl)
+WHEEL=("$DIST_DIR"/caelus_agent-*.whl)
 [[ -f "${WHEEL[0]}" ]] || { echo "Wheel was not produced." >&2; exit 1; }
 
 "$PYTHON" - "${WHEEL[0]}" <<'PY'

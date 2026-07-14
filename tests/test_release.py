@@ -15,7 +15,9 @@ def test_release_metadata_and_notices_disclose_runtime_and_proprietary_caelus_te
     assert 'packages = ["caelus_terminal"]' in pyproject
     assert "All Rights Reserved" in license_text
     assert "No permission is granted" in license_text
-    assert "Caelus Terminal" in notice
+    assert 'name = "caelus-agent"' in pyproject
+    assert 'description = "A local-first agent command center powered by Hermes Agent"' in pyproject
+    assert "Caelus Agent" in notice
     assert "Hermes Agent" in notice
     assert "Nous Research" in notice
 

@@ -2,10 +2,10 @@ from __future__ import annotations
 
 
 def runtime_help() -> str:
-    """Describe Caelus Terminal controls without pretending to replace Hermes."""
+    """Describe Caelus Agent controls without pretending to replace Hermes."""
     return "\n".join(
         [
-            "Caelus Terminal controls:",
+            "Caelus Agent controls:",
             "  /help          show this help",
             "  /quit, /exit   end this Caelus chat",
             "",

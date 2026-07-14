@@ -1,1 +1,1 @@
-"""Caelus Terminal: a terminal chat surface powered by an external agent runtime."""
+"""Caelus Agent: a local-first agent command center powered by Hermes Agent."""

@@ -172,7 +172,7 @@ def main(argv: list[str] | None = None) -> int:
         return template_control(argv[2:], action="export")
     if argv and argv[:2] == ["template", "import"]:
         return template_control(argv[2:], action="import")
-    parser = argparse.ArgumentParser(description="Caelus Terminal")
+    parser = argparse.ArgumentParser(description="Caelus Agent")
     parser.add_argument("--demo", action="store_true", help="render the local UI demo")
     parser.add_argument(
         "--expanded-tools", action="store_true", help="show collapsed tool activity"
