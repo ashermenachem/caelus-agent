@@ -29,11 +29,26 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--api-key", help="local Hermes API server key")
     parser.add_argument("--agent", default="default", help="Caelus agent conversation name")
     parser.add_argument("--chat", help="send one message through the configured runtime")
+    parser.add_argument("--interactive", action="store_true", help="start an interactive terminal chat")
     args = parser.parse_args(argv)
 
     if args.demo:
         print(render_dashboard(demo_state(), show_tool_activity=args.expanded_tools))
         return 0
+
+    if args.interactive:
+        if not args.endpoint or not args.api_key:
+            parser.error("--interactive requires --endpoint and --api-key")
+        client = HermesClient(args.endpoint, args.api_key)
+        print(render_dashboard(demo_state()))
+        print("Type /quit to end the Caelus chat session.")
+        while True:
+            message = input("\n> ").strip()
+            if message in {"/quit", "/exit"}:
+                return 0
+            if not message:
+                continue
+            print(f"\n{args.agent}: {client.chat(message, conversation=args.agent)}")
 
     if args.chat:
         if not args.endpoint or not args.api_key:

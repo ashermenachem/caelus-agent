@@ -26,5 +26,9 @@ def test_client_posts_chat_request_with_named_conversation():
 
     sent = request.call_args.args[0]
     assert sent.full_url == "http://127.0.0.1:8642/v1/chat/completions"
-    assert json.loads(sent.data) == {"model": "hermes-agent", "input": "Hello", "conversation": "nova"}
+    assert json.loads(sent.data) == {
+        "model": "hermes-agent",
+        "messages": [{"role": "user", "content": "Hello"}],
+    }
     assert sent.get_header("Authorization") == "Bearer test-key"
+    assert sent.get_header("X-hermes-session-id") == "nova"

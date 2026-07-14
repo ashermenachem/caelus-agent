@@ -17,6 +17,16 @@ Expand collapsed tool activity:
 ./.venv/bin/python -m caelus_terminal --demo --expanded-tools
 ```
 
+## macOS installer
+
+From a checked-out Caelus Terminal release:
+
+```bash
+bash scripts/install-macos.sh
+```
+
+The installer creates `~/.caelus/venv`, installs the `caelus` command in `~/.local/bin`, installs Hermes automatically if it is missing, and launches native `hermes setup`. It does not copy another user’s memory, sessions, secrets, or workflows.
+
 ## Optional runtime connection
 
 When a separately configured local Hermes API server is running, send one message without touching the active default Hermes home:

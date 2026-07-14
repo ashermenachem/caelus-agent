@@ -14,8 +14,7 @@ class HermesClient:
     def chat(self, message: str, *, conversation: str) -> str:
         payload = {
             "model": "hermes-agent",
-            "input": message,
-            "conversation": conversation,
+            "messages": [{"role": "user", "content": message}],
         }
         request = Request(
             f"{self.base_url}/chat/completions",
@@ -23,6 +22,7 @@ class HermesClient:
             headers={
                 "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json",
+                "X-Hermes-Session-Id": conversation,
             },
             method="POST",
         )
